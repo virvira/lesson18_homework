@@ -12,15 +12,27 @@ movies_schema = MovieSchema(many=True)
 @movie_ns.route('/')
 class MoviesView(Resource):
     def get(self):
-        all_movies = movie_service.get_all()
+        movies_list = movie_service.get_all()
 
-        return movies_schema.dump(all_movies), 200
+        director_id = request.args.get('director_id')
+        if director_id is not None:
+            movies_list = movie_service.get_by_director(director_id)
+
+        genre_id = request.args.get('genre_id')
+        if genre_id is not None:
+            movies_list = movie_service.get_by_genre(genre_id)
+
+        year = request.args.get('year')
+        if year is not None:
+            movies_list = movie_service.get_by_year(year)
+
+        return movies_schema.dump(movies_list), 200
 
     def post(self):
         req_json = request.json
         try:
-            movie_service.create(req_json)
-            return "", 201
+            movie = movie_service.create(req_json)
+            return "", 201, {"location": f"/movies/{movie.id}"}
         except Exception as e:
             return {"error": f"{e}"}, 400
 
@@ -57,9 +69,11 @@ class MovieView(Resource):
         return "", 204
 
     def delete(self, mid):
-        movie_service.delete(mid)
+        movie = movie_service.get_one(mid)
 
-        # if movie is None:
-        #     return {"error": "Movie not found"}, 404
+        if movie is None:
+            return {"error": "Movie not found"}, 404
+
+        movie_service.delete_one(mid)
 
         return "", 204

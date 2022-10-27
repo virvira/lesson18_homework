@@ -13,6 +13,18 @@ class MovieDAO:
         movies_list = self.session.query(Movie).all()
         return movies_list
 
+    def get_by_director(self, director_id):
+        movies_list = self.session.query(Movie).filter(Movie.director_id == director_id)
+        return movies_list
+
+    def get_by_genre(self, genre_id):
+        movies_list = self.session.query(Movie).filter(Movie.genre_id == genre_id)
+        return movies_list
+
+    def get_by_year(self, year):
+        movies_list = self.session.query(Movie).filter(Movie.year == year)
+        return movies_list
+
     def create(self, data):
         movie = Movie(**data)
 

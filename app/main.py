@@ -30,8 +30,9 @@ def register_extensions(app):
 
 def create_data(app, db):
     with app.app_context():
-        db.drop_all()
-        db.create_all()
+        # db.drop_all()
+        # db.create_all()
+        # db.session.commit()
 
         data = {
             "movies": [{
@@ -234,7 +235,6 @@ def create_data(app, db):
                 {"name": "Мелодрама", "pk": 13}, {"name": "Детектив", "pk": 14}, {"name": "Авторское кино", "pk": 15},
                 {"name": "Мультфильм", "pk": 16}, {"name": "Вестерн", "pk": 17}, {"name": "Мюзикл", "pk": 18}],
         }
-        # -------------------------------------------------------
 
         # for director in data["directors"]:
         #     d = Director(
